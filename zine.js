@@ -427,7 +427,7 @@ let hookPage = (doc, index, options) => {
 			{ x: columns[1].x-3, y: grid.hanglines[2]-8, },
 			{ x: columns[9].x, y: grid.hanglines[2]-8, }
 		],
-		strokeWeight: 2,
+		strokeWeight: 1.5,
 		stroke:'black',
 	})(doc)
 
@@ -490,7 +490,7 @@ let data = [
 		},
 
 		{
-			description: 'Face mapped to word length',
+			description: 'Typeface mapped to word length',
 			text: `The structure enables composition, but it doesn't determine it. A page has a certain order of space but that doesn't determine the order or the composition of content. theres a particular order of a space on a page, but that will not control the way content will appear on the page. Everything is contingent on everything else, except for the composition. The composition is decided apriori. Using ~> dependencies as a way to talk about how this tool is different. In InDesign, composition is decided on top of which grep style can be applied.`,
 			hook: (opts,word) => {
 				if (word.length > 6) opts.fontFamily = './marist.ttf'
@@ -546,7 +546,7 @@ let data = [
 			} 
 		},
 	
-{
+	{
 		description: 'Rotation mapped to word length',
 		text: `Language carries rhythm even in silent reading. Each word tilts the balance of perception slightly, creating a visual cadence across the page.`,
 		hook: (opts,word) => {
@@ -575,29 +575,30 @@ let data = [
 	},
 
 	{
-		description: 'Size + rotation mapped to word length',
-		text: `Distribute the logic across perception so that reading becomes an act of reconstruction rather than passive intake.`,
+		description: 'Size and rotation mapped to word length',
+		text: `When u leave blood family, u attach like everyone’s kin—because they are. The people who folded me in became family. I never questioned that. And sometimes I’ve been corrected on that assumption. But still—it shaped me.`,
 		hook: (opts,word) => {
 			let len = word.length
-			opts.fontSize = len/3 + 6
+			opts.fontSize = len/3 + 7
 			opts.rotate = (len % 6 - 3) * 3
 		}
 	},
 
 	{
-		description: 'Inverse size + bold weight for short words',
-		text: `Short words punctuate rhythm while longer ones stretch time across the surface of reading.`,
+		description: 'Size, rotation and weight mapped to word length',
+		text: `For as long as I can remember, this has been one of my favorite feelings. To be alone in public, wandering at night, or lying close to the earth, anonymous, invisible, floating. […] To make your claim on public space even as you feel yourself disappearing into its largess, into its sublimity. To practice death by feeling completely empty, but somehow alive. `,
 		hook: (opts,word) => {
 			let len = word.length
 			opts.fontSize = 14 - len/2
 			if (len <= 3) opts.fontFamily = './favorit/ABCFavorit-Bold-Trial.otf'
 			else if (len <= 6) opts.fontFamily = './favorit/ABCFavorit-Medium-Trial.otf'
 			else opts.fontFamily = './favorit/ABCFavorit-Light-Trial.otf'
+			opts.rotate = (len % 6 - 3) * 3
 		}
 	},
 
 	{
-		description: 'Vowel-based rotation + weight',
+		description: 'Rotation and weight mapped to vowel count',
 		text: `The kitchen now, for me, is a place of ownership and control and (very very low-level) mastery in a way it has never been before. Plop me in the middle of it and I am certain I can make something delicious in 20 minutes given whatever is at hand. I have never felt this way before, and may never have gotten to this place without forced isolation. I’ve cooked every meal here for the last two months. It has unlocked a delight and culinary eroticism that was hitherto a great self-mystery, but now I get it I get it. The kitchen, food, owning this space — this is the grit of life. And I realize how “sheltered dumb” this sounds, like I’m some ding-dong that just discovered that water is delicious when slaking thirst, but — ye upon your high horses — I have been “cooking” (almost) daily for decades. The point is: I had never taken whatever that next step was towards full ownership. 
 This reminds me of meditation practice (or any practice, for that matter) as well. Once a week for decades gets you almost nowhere (I know, I’ve done that); allows at best for you to say “I do meditation” and acquire the requisite mats and towels, sitting pillows, singing bowls. Whereas ten hours a day for ten days straight can provide you with a tool for life.
 Not just big-loop repetition, but tight-loop, highly iterative, sustained repetition.`,
@@ -612,37 +613,41 @@ Not just big-loop repetition, but tight-loop, highly iterative, sustained repeti
 	},
 
 	{
-		description: 'Opacity inverse to length + size from vowels',
+		description: 'Opacity inversely mapped to word length',
 		text: `like I’m some ding-dong that just discovered that water is delicious when slaking thirst, but — ye upon your high horses — I have been “cooking” (almost) daily for decades. The point is: I had never taken whatever that next step was towards full ownership. 
 This reminds me of meditation practice (or any practice, for that matter) as well. Once a week for decades gets you almost nowhere (I know, I’ve done that); allows at best for you to say “I do meditation” and acquire the requisite mats and towels, sitting pillows, singing bowls. Whereas ten hours a day for ten days straight can provide you with a tool for life.
 Not just big-loop repetition, but tight-loop, highly iterative, sustained repetition.`,
 		hook: (opts,word) => {
 			let len = word.length
-			let vowels = countVowels(word)
 
-			opts.opacity = Math.max(0.4, 1 - len/12)
-			opts.fontSize = vowels + 6
+			opts.opacity = 1 - len/12
+			opts.fontSize = len/2 + 6
 		}
 	},
 
 	{
-		description: 'Letter spacing + rotation mapped together',
-		text: `Spacing and direction together define motion across a static surface, suggesting invisible flows.`,
+		description: 'Rotation and weight mapped to word length',
+		text: `In our current climate, we do a terrible lot of reading books as propaganda... we expect [books] to tell us precisely how to speak and act and think and behave, because we've fallen into the habit of reading and critiquing books solely for what we think are their themes and messages, rather than reading [books] as explorations of all the infinite ways that one can be human.`,
 		hook: (opts,word) => {
-			let len = word.length
-			opts.letterSpacing = len * 0.15
-			opts.rotate = (len % 8 - 4) * 2
+			let vowels = word.length/4
+			opts.rotate = (vowels - 2) * 2.5
+
+			if (vowels > 2) opts.fontFamily = './favorit/ABCFavorit-Bold-Trial.otf'
+			else if (vowels > 1) opts.fontFamily = './favorit/ABCFavorit-Book-Trial.otf'
+			else opts.fontFamily = './favorit/ABCFavorit-Light-Trial.otf'
 		}
 	},
 
 	{
-		description: 'Everything subtle: small size shifts + low opacity variance',
-		text: `Not all systems need to be loud. Small differences accumulate into perceptible structure over time.`,
+		description: 'Rotation weight and typeface mapped to word length',
+		text: `Thank you for going through this booklet :) The type in this booklet was typeset in ABC Favorit, ABC Monument Mono and ABC Marist. Printed on Ardor the Inkjet printer.`,
 		hook: (opts,word) => {
-			let len = word.length
-			let vowels = countVowels(word)
-			opts.fontSize = 10 + len * 0.5
-			opts.opacity = 0.6 + vowels * 0.1
+			let vowels = word.length/4
+			opts.rotate = (vowels - 2) * 5
+
+			if (vowels > 2) opts.fontFamily = './favorit/ABCFavorit-Book-Trial.otf'
+			else if (vowels > 1) opts.fontFamily = './monument_mono_regular.otf'
+			else opts.fontFamily = './marist.ttf'
 		}
 	},
 
@@ -652,6 +657,49 @@ Not just big-loop repetition, but tight-loop, highly iterative, sustained repeti
 
 
 let spreads = [
+	[ (doc) => {
+
+		draw_grid(doc, grid, {crops: true})
+
+		let columns = grid.rectoColumns
+
+		drawLineDocFn({
+			points: [
+				{ x: columns[1].x-3, y: grid.hanglines[2]-8, },
+				{ x: columns[9].x, y: grid.hanglines[2]-8, }
+			],
+			strokeWeight: 1.5,
+			stroke:'black',
+		})(doc)
+
+	drawLineDocFn({
+		points: [
+			{ x: columns[1].x-3, y: grid.hanglines[6]-8, },
+			{ x: columns[9].x, y: grid.hanglines[6]-8, }
+		],
+		strokeWeight: .2,
+		stroke:'black',
+	})(doc)
+
+		drawTextDocFn({
+			text: "Introduction",
+			x: grid.rectoColumns[1].x,
+			y: grid.hanglines[2],
+			width: inch(3),
+			fontFamily: './favorit/ABCFavorit-Bold-Trial.otf',
+			fontSize: 11
+		})(doc)
+
+		drawTextDocFn({
+			text: "Proof of concept paragraphs for conditional typesetting. Conditional typesetting places a condition before placing each word onto the canvas. Based on given logics it alters the formal qualities of how the word appears and produces intriguing rhythms.",
+			x: grid.rectoColumns[1].x,
+			y: grid.hanglines[6],
+			width: inch(3),
+			fontFamily: './favorit/ABCFavorit-Regular-Trial.otf',
+			fontSize: 8
+		})(doc)
+
+	}],
 	[ 
 		(doc) => hookPage(doc, 0, data[0]),
 	],
@@ -691,10 +739,11 @@ let spreads = [
 		(doc) => hookPage(doc, 14, data[14]),
 	],
 
-	// [
-	// 	(doc) => hookPage(doc, 15, data[15]),
-	// 	(doc) => hookPage(doc, 16, data[16]),
-	// ],
+	[
+		(doc) => hookPage(doc, 15, data[15]),
+		(doc) => hookPage(doc, 16, data[16]),
+	],
+	[]
 	//
 	// [
 	// 	(doc) => hookPage(doc, 17, data[17]),
@@ -713,8 +762,8 @@ let page_number_fn = (page_number) => (doc) => {
 	let pg = page_number
 	doc.fontSize(9)
 	doc.fillColor([0, 0, 0, 45])
-	if (pg - 1 != 0) doc.text((pg - 1) + '', grid.versoColumns[1].x, grid.topPadding+inch(.125))
-	doc.text((pg) + '', grid.rectoColumns[2].x, grid.topPadding+inch(.125))
+	if (pg - 1 != 0) doc.text((pg - 1) + '', grid.versoColumns[2].x, grid.props.spreadHeight-inch(1/4))
+	doc.text((pg) + '', grid.rectoColumns[2].x, grid.props.spreadHeight-inch(1/4))
 
 	let off = page_number
 	if (side == 'right') off = off - 90
