@@ -9,6 +9,18 @@ let monoFont = './monument_mono_medium.otf'
 let color = [100, 50, 0, 0]
 highlightColor = [0, 100, 0, 0]
 
+function countVowels(str) {
+  const vowels = 'aeiouAEIOU';
+  let count = 0;
+
+  for (let char of str) {
+    if (vowels.includes(char)) {
+      count++;
+    }
+  }
+
+  return count;
+}
 
 let Grid = props => {
 	let columnWidth = (() => {
@@ -475,8 +487,168 @@ let data = [
 				else if (word.length > 3) opts.fontFamily = './favorit/ABCFavorit-Medium-Trial.otf'
 				else opts.fontFamily = './favorit/ABCFavorit-Bold-Trial.otf'
 			} 
+		},
+
+		{
+			description: 'Face mapped to word length',
+			text: `The structure enables composition, but it doesn't determine it. A page has a certain order of space but that doesn't determine the order or the composition of content. theres a particular order of a space on a page, but that will not control the way content will appear on the page. Everything is contingent on everything else, except for the composition. The composition is decided apriori. Using ~> dependencies as a way to talk about how this tool is different. In InDesign, composition is decided on top of which grep style can be applied.`,
+			hook: (opts,word) => {
+				if (word.length > 6) opts.fontFamily = './marist.ttf'
+				else if (word.length > 3) opts.fontFamily = './favorit/ABCFavorit-Book-Trial.otf'
+				else opts.fontFamily = './monument_mono_regular.otf'
+			} 
+		},
+
+		{
+			description: 'Weight mapped to vowel count',
+			text: `The book tool can represent sheets (pre fabrication) and spreads (post fabrication) for any configuration (page numbers) which can also be thought of as locations in time or locations in process. For instance sheets have a linear location of coming before having assembled to form spreads. So these views can be thought of as keyframes. The sequence of the book itself obviously is also linear keyframes. The makes me also think, multiple layer books, book jackets as layers that come together to form a book? Thinking along these lines and write a blurb`,
+			hook: (opts,word) => {
+				let vowels = countVowels(word)
+				if (vowels > 2) opts.fontFamily = './favorit/ABCFavorit-Light-Trial.otf' 
+				else if (vowels > 1) opts.fontFamily = './favorit/ABCFavorit-Book-Trial.otf'
+				else opts.fontFamily = './favorit/ABCFavorit-Bold-Trial.otf'
+			} 
+		},
+
+		{
+			description: 'Weight and size mapped to vowel count',
+			text: `The book tool can represent sheets (pre fabrication) and spreads (post fabrication) for any configuration (page numbers) which can also be thought of as locations in time or locations in process. For instance sheets have a linear location of coming before having assembled to form spreads. So these views can be thought of as keyframes. The sequence of the book itself obviously is also linear keyframes. The makes me also think, multiple layer books, book jackets as layers that come together to form a book? Thinking along these lines and write a blurb`,
+			hook: (opts,word) => {
+				let vowels = countVowels(word)
+				if (vowels > 2) opts.fontFamily = './favorit/ABCFavorit-Light-Trial.otf' 
+				else if (vowels > 1) opts.fontFamily = './favorit/ABCFavorit-Book-Trial.otf'
+				else opts.fontFamily = './favorit/ABCFavorit-Bold-Trial.otf'
+				opts.fontSize = word.length/3+6
+			} 
+		},
+
+		{
+			description: 'Weight and size inversely mapped to vowel count',
+			text: `The book tool can represent sheets (pre fabrication) and spreads (post fabrication) for any configuration (page numbers) which can also be thought of as locations in time or locations in process. For instance sheets have a linear location of coming before having assembled to form spreads. So these views can be thought of as keyframes. The sequence of the book itself obviously is also linear keyframes. The makes me also think, multiple layer books, book jackets as layers that come together to form a book? Thinking along these lines and write a blurb`,
+			hook: (opts,word) => {
+				let vowels = countVowels(word)
+				if (vowels > 2) opts.fontFamily = './favorit/ABCFavorit-Bold-Trial.otf' 
+				else if (vowels > 1) opts.fontFamily = './favorit/ABCFavorit-Book-Trial.otf'
+				else opts.fontFamily = './favorit/ABCFavorit-Light-Trial.otf'
+				opts.fontSize = 10 - word.length/3
+			} 
+		},
+
+		{
+			description: 'Weight and size inversely mapped to vowel count',
+			text: `Talks about music, the role of effort in learning, the value of constraints... iteration, slowly carving a performance or thing.... I think I need to embrace constraints as he points out in the talk. Having very few options, vector edits based on svg... so lines and curves. There's already good enough interface models for this so just stick to them. Having some image stuff... This shouldn't be hard. Color adjustments, masks, crops and transforms. And text layouting.`,
+			hook: (opts,word) => {
+				let vowels = countVowels(word)
+				if (vowels > 2) opts.fontFamily = './favorit/ABCFavorit-Bold-Trial.otf' 
+				else if (vowels > 1) opts.fontFamily = './favorit/ABCFavorit-Book-Trial.otf'
+				else opts.fontFamily = './favorit/ABCFavorit-Light-Trial.otf'
+				opts.fontSize = 10 - word.length/3
+			} 
+		},
+	
+{
+		description: 'Rotation mapped to word length',
+		text: `Language carries rhythm even in silent reading. Each word tilts the balance of perception slightly, creating a visual cadence across the page.`,
+		hook: (opts,word) => {
+			opts.rotate = (word.length % 10 - 5) * 2
 		}
+	},
+
+	{
+		description: 'Opacity mapped to vowel count',
+		text: `“Emergence is the way complex systems and patterns arise out of a multiplicity of relatively simple interactions”—I will repeat these words from Nick Obolenksy throughout this book because they are the clearest articulation of emergence that I have come across. In the framework of emergence, the whole is a mirror of the parts. Existence is fractal—the health of the cell is the health of the species and the planet.`,
+		hook: (opts,word) => {
+			let vowels = countVowels(word)
+			opts.opacity = Math.min(1, vowels / 3)
+		}
+	},
+
+{
+		description: 'Letter spacing mapped to word length',
+		text: `It is the intention of most vegans to cause as little harm and as little suffering as possible to all sentient beings, including field mice. That some measure of harm will result from some of our choices is practically unavoidable. What the vegan concern themselves with, however, is minimizing that harm as much as they can by making choices that don't require that animals be enslaved, exploited, and slaughtered.`,
+		hook: (opts,word) => {
+			let consonants = word.length 
+			opts.letterSpacing = consonants * 0.1
+			opts.characterSpacing = consonants * 0.1
+
+		}
+	},
+
+	{
+		description: 'Size + rotation mapped to word length',
+		text: `Distribute the logic across perception so that reading becomes an act of reconstruction rather than passive intake.`,
+		hook: (opts,word) => {
+			let len = word.length
+			opts.fontSize = len/3 + 6
+			opts.rotate = (len % 6 - 3) * 3
+		}
+	},
+
+	{
+		description: 'Inverse size + bold weight for short words',
+		text: `Short words punctuate rhythm while longer ones stretch time across the surface of reading.`,
+		hook: (opts,word) => {
+			let len = word.length
+			opts.fontSize = 14 - len/2
+			if (len <= 3) opts.fontFamily = './favorit/ABCFavorit-Bold-Trial.otf'
+			else if (len <= 6) opts.fontFamily = './favorit/ABCFavorit-Medium-Trial.otf'
+			else opts.fontFamily = './favorit/ABCFavorit-Light-Trial.otf'
+		}
+	},
+
+	{
+		description: 'Vowel-based rotation + weight',
+		text: `The kitchen now, for me, is a place of ownership and control and (very very low-level) mastery in a way it has never been before. Plop me in the middle of it and I am certain I can make something delicious in 20 minutes given whatever is at hand. I have never felt this way before, and may never have gotten to this place without forced isolation. I’ve cooked every meal here for the last two months. It has unlocked a delight and culinary eroticism that was hitherto a great self-mystery, but now I get it I get it. The kitchen, food, owning this space — this is the grit of life. And I realize how “sheltered dumb” this sounds, like I’m some ding-dong that just discovered that water is delicious when slaking thirst, but — ye upon your high horses — I have been “cooking” (almost) daily for decades. The point is: I had never taken whatever that next step was towards full ownership. 
+This reminds me of meditation practice (or any practice, for that matter) as well. Once a week for decades gets you almost nowhere (I know, I’ve done that); allows at best for you to say “I do meditation” and acquire the requisite mats and towels, sitting pillows, singing bowls. Whereas ten hours a day for ten days straight can provide you with a tool for life.
+Not just big-loop repetition, but tight-loop, highly iterative, sustained repetition.`,
+		hook: (opts,word) => {
+			let vowels = countVowels(word)
+			opts.rotate = (vowels - 2) * 5
+
+			if (vowels > 2) opts.fontFamily = './favorit/ABCFavorit-Light-Trial.otf'
+			else if (vowels > 1) opts.fontFamily = './favorit/ABCFavorit-Book-Trial.otf'
+			else opts.fontFamily = './favorit/ABCFavorit-Bold-Trial.otf'
+		}
+	},
+
+	{
+		description: 'Opacity inverse to length + size from vowels',
+		text: `like I’m some ding-dong that just discovered that water is delicious when slaking thirst, but — ye upon your high horses — I have been “cooking” (almost) daily for decades. The point is: I had never taken whatever that next step was towards full ownership. 
+This reminds me of meditation practice (or any practice, for that matter) as well. Once a week for decades gets you almost nowhere (I know, I’ve done that); allows at best for you to say “I do meditation” and acquire the requisite mats and towels, sitting pillows, singing bowls. Whereas ten hours a day for ten days straight can provide you with a tool for life.
+Not just big-loop repetition, but tight-loop, highly iterative, sustained repetition.`,
+		hook: (opts,word) => {
+			let len = word.length
+			let vowels = countVowels(word)
+
+			opts.opacity = Math.max(0.4, 1 - len/12)
+			opts.fontSize = vowels + 6
+		}
+	},
+
+	{
+		description: 'Letter spacing + rotation mapped together',
+		text: `Spacing and direction together define motion across a static surface, suggesting invisible flows.`,
+		hook: (opts,word) => {
+			let len = word.length
+			opts.letterSpacing = len * 0.15
+			opts.rotate = (len % 8 - 4) * 2
+		}
+	},
+
+	{
+		description: 'Everything subtle: small size shifts + low opacity variance',
+		text: `Not all systems need to be loud. Small differences accumulate into perceptible structure over time.`,
+		hook: (opts,word) => {
+			let len = word.length
+			let vowels = countVowels(word)
+			opts.fontSize = 10 + len * 0.5
+			opts.opacity = 0.6 + vowels * 0.1
+		}
+	},
+
+
 ]
+
 
 
 let spreads = [
@@ -487,8 +659,48 @@ let spreads = [
 	[
 		(doc) => hookPage(doc, 1, data[1]),
 		(doc) => hookPage(doc, 2, data[2])
-	]
+	],
 
+	[
+		(doc) => hookPage(doc, 3, data[3]),
+		(doc) => hookPage(doc, 4, data[4]),
+	],
+
+	[
+		(doc) => hookPage(doc, 5, data[5]),
+		(doc) => hookPage(doc, 6, data[6]),
+	],
+
+	[
+		(doc) => hookPage(doc, 7, data[7]),
+		(doc) => hookPage(doc, 8, data[8]),
+	],
+
+	[
+		(doc) => hookPage(doc, 9, data[9]),
+		(doc) => hookPage(doc, 10, data[10]),
+	],
+
+	[
+		(doc) => hookPage(doc, 11, data[11]),
+		(doc) => hookPage(doc, 12, data[12]),
+	],
+
+	[
+		(doc) => hookPage(doc, 13, data[13]),
+		(doc) => hookPage(doc, 14, data[14]),
+	],
+
+	// [
+	// 	(doc) => hookPage(doc, 15, data[15]),
+	// 	(doc) => hookPage(doc, 16, data[16]),
+	// ],
+	//
+	// [
+	// 	(doc) => hookPage(doc, 17, data[17]),
+	// 	(doc) => hookPage(doc, 18, data[18]),
+	// ],
+	//
 
 ]
 
@@ -535,6 +747,8 @@ let ParagraphStepper = (doc, props) => {
 			words, x: props.x,
 			y: cursorY,
 			width: props.width, 
+			opacity: props.opacity,
+			rotate: props.rotate,
 			align, hook: props.hook
 
 		}
@@ -556,6 +770,7 @@ let ParagraphStepper = (doc, props) => {
 
 
 let Line = (doc, props) => {
+	let total = [...props.words]
 	let words = props.words
 	let cursorX = props.x
 	let drawables = []
@@ -566,11 +781,12 @@ let Line = (doc, props) => {
 	let spaceWidth
 	let pad
 	let textFont = props.fontFamily
+	let index = 0
 
 	while (words.length > 0 && cursorX < (props.x + props.width)  ) {
 		let word = words.shift()
+		index++
 		if (!word) break
-
 
 		let opts = {
 			x: cursorX,
@@ -585,11 +801,15 @@ let Line = (doc, props) => {
 
 		// if (word.length > 4) opts.fontFamily = ''
 		if (props.hook) {
-			props.hook(opts, word)
+			props.hook(opts, word, index, total)
 		}
 
 		if (opts.fontSize) doc.fontSize(opts.fontSize)
 		if (opts.fontFamily) doc.font(opts.fontFamily)
+		if (opts.opacity) {
+			opts.fill = [0,0,0,100*opts.opacity]
+		}
+		if (opts.rotate) opts.rotation = opts.rotate
 
 		let width = doc.widthOfString(word, opts)
 	  spaceWidth = doc.widthOfString(" ", opts)
@@ -753,13 +973,15 @@ let drawTextDocFn = (props) => (doc) => {
 	let text = props.text;
 	let fontSize = props.fontSize ? props.fontSize : 12;
 	let fontFamily = props.fontFamily;
+	let rotation = props.rotation ? props.rotation: 0
+	let characterSpacing = props.letterSpacing ? props.letterSpacing : 0
 	// let stroke = props.stroke ? true : false;
 
 	if (props.fill) doc.fillColor(props.fill);
 	if (fontFamily) doc.font(fontFamily);
 	// if (props.stroke) doc.stroke(props.stroke);
 	doc.fontSize(fontSize);
-	doc.text(text, x, y, { width, height });
+	doc.text(text, x, y, { width, height, rotation, characterSpacing });
 
 	if (props.boundingBox) {
 		doc.rect(x, y, width, height);
