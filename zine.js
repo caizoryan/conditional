@@ -396,23 +396,43 @@ let draw_grid = (doc, grid, opts) => {
 let blankpage = (doc) => draw_grid(doc, randomGrid(), {crops: true, drawGrid: true})		
 
 let hookPage = (doc, index, options) => {
-	draw_grid(doc, grid, {crops: true, drawGrid: true})		
+	draw_grid(doc, grid, {crops: true})		
 	let text = options.text
+	let columns = grid.versoColumns
+	index % 2 == 0 ? columns = grid.rectoColumns : columns = grid.versoColumns
 
 	drawTextDocFn({
-		x: grid.rectoColumns[0].x,
-		y: grid.hanglines[4],
-		width: inch(3),
+		x: columns[1].x,
+		y: grid.hanglines[2],
+		width: inch(3.5),
 		fontSize: 8,
 		text: options.description,
 		fontFamily: './monument_mono_regular.otf'
 	})(doc)
 
+	drawLineDocFn({
+		points: [
+			{ x: columns[1].x-3, y: grid.hanglines[2]-8, },
+			{ x: columns[9].x, y: grid.hanglines[2]-8, }
+		],
+		strokeWeight: 2,
+		stroke:'black',
+	})(doc)
+
+	drawLineDocFn({
+		points: [
+			{ x: columns[1].x-3, y: grid.hanglines[6]-8, },
+			{ x: columns[9].x, y: grid.hanglines[6]-8, }
+		],
+		strokeWeight: .2,
+		stroke:'black',
+	})(doc)
+
 	let lines = ParagraphStepper(doc, {
 		text,
-		x: grid.rectoColumns[0].x,
+		x: columns[1].x,
 		y: grid.hanglines[6],
-		width: inch(2),
+		width: inch(2.8),
 		height: inch(2),
 		hook: options.hook,
 		fontSize: 9,
@@ -430,24 +450,44 @@ let stylesheet = (doc, t) => Object.entries(t).forEach(([k, v]) => doc[k](v))
 
 let page_number = 1
 
+let data = [
+		{
+			description: 'Size mapped to word length',
+			text: `Distribute the software not as a clean code base to be used but rather as a tutorial to make it yourself. So the person whoever uses this tool can fix it, edit it and change it rather than relying on updates from a developer. Think of making a repl/code editor on a webpage and have interactive tutorial for it.`,
+			hook: (opts,word) => {  opts.fontSize = word.length/3+6 } 
+		},
+
+		{
+			description: 'Weight inversely mapped to word length',
+			text: `FoldFace is a an obtusely simple file format for defining typefaces. Typefaces can be designed by folding thin and long strips of paper and logging the fold points into a FoldFace Editor. A FoldFace file can be run to output an .otf or .ttf file. The FoldFace specification outlines the structure for reading and writing a FoldFace file so anyone interested to can implement their own editor, or iterate on existing ones.`,
+			hook: (opts,word) => {
+				if (word.length > 6) opts.fontFamily = './favorit/ABCFavorit-Bold-Trial.otf' 
+				else if (word.length > 3) opts.fontFamily = './favorit/ABCFavorit-Medium-Trial.otf'
+				else opts.fontFamily = './favorit/ABCFavorit-Light-Trial.otf'
+			} 
+		},
+
+		{
+			description: 'Weight mapped to word length',
+			text: `FoldFace is a an obtusely simple file format for defining typefaces. Typefaces can be designed by folding thin and long strips of paper and logging the fold points into a FoldFace Editor. A FoldFace file can be run to output an .otf or .ttf file. The FoldFace specification outlines the structure for reading and writing a FoldFace file so anyone interested to can implement their own editor, or iterate on existing ones.`,
+			hook: (opts,word) => {
+				if (word.length > 6) opts.fontFamily = './favorit/ABCFavorit-Light-Trial.otf' 
+				else if (word.length > 3) opts.fontFamily = './favorit/ABCFavorit-Medium-Trial.otf'
+				else opts.fontFamily = './favorit/ABCFavorit-Bold-Trial.otf'
+			} 
+		}
+]
+
+
 let spreads = [
 	[ 
-		(doc) => hookPage(doc, 0, {
-			text: "This is just any other text but the more-mportant thing is the hook",
-			hook: (opts,word) => { if (word.length > 4) opts.fontSize = 8 } 
-		}) 
+		(doc) => hookPage(doc, 0, data[0]),
 	],
 
-	[ 
-		(doc) => hookPage(doc, 0, {
-			description: 'Weight mapped to word length',
-			text: "What the mother dawg monkey, because I'm in a new world",
-			hook: (opts,word) => {
-				if (word.length > 4) opts.fontFamily = './monument_mono_regular.otf' 
-				else opts.fontFamily = './monument_mono_bold.otf'
-			} 
-		}) 
-	],
+	[
+		(doc) => hookPage(doc, 1, data[1]),
+		(doc) => hookPage(doc, 2, data[2])
+	]
 
 
 ]
